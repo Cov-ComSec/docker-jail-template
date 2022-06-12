@@ -4,7 +4,7 @@ services:
   challenge:
     build:
       context: .
-    args:
-      COMPILE_CHALLENGE="gcc challenge.c -o challenge"
+      args:
+        COMPILE_CHALLENGE: "gcc challenge.c -o challenge"
     ports:
       - 0.0.0.0:1337:9999
