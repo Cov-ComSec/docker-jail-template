@@ -1,9 +1,10 @@
 FROM ubuntu:20.04
 
 RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
-    apt-get update 
+    apt-get update && \
+    
 
-RUN apt-get install -y lib32z1 xinetd gcc && \
+RUN apt-get install --no-install-recommends -qy libc6-dev lib32z1 xinetd gcc  && \
     useradd -m ctf
 
 WORKDIR /home/ctf
@@ -30,9 +31,12 @@ RUN echo "Blocked by ctf_xinetd" > /etc/banner_fail && \
 
 EXPOSE 9999
 
+ARG COMPILE_CHALLENGE
+ENV COMPILE=${COMPILE_CHALLENGE}
+
 COPY ./bin/ /home/ctf/
 
-RUN gcc -s challenge.c -o challenge && \
+RUN $COMPILE && \
     chmod +x challenge && \ 
     chown -R root:ctf /home/ctf && \
     chmod -R 750 /home/ctf && \
