@@ -1,10 +1,9 @@
 FROM ubuntu:20.04
 
 RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
-    apt-get update && \
-    
+    apt-get update 
 
-RUN apt-get install --no-install-recommends -qy libc6-dev lib32z1 xinetd gcc  && \
+RUN apt-get install --no-install-recommends -qy libc6-dev xinetd gcc openssl && \
     useradd -m ctf
 
 WORKDIR /home/ctf
