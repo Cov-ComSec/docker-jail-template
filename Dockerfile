@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
     apt-get update 
 
-RUN apt-get install --no-install-recommends -qy libc6-dev xinetd gcc openssl && \
+RUN apt-get install --no-install-recommends -qy libc6-dev xinetd gcc && \
     useradd -m ctf
 
 WORKDIR /home/ctf
