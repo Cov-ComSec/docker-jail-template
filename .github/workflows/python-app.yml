@@ -28,4 +28,4 @@ jobs:
         sudo apt install -qy make && make docker
     - name: Test with pytest
       run: |
-        pytest
+        python3 -m pip install pytest && pytest
