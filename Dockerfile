@@ -1,9 +1,19 @@
+FROM ubuntu:20.04 as builder
+
+RUN apt-get update && apt-get install --no-install-recommends -qy libc6-dev gcc && \
+    useradd -m ctf
+
+WORKDIR /home/ctf
+
+ARG COMPILE_CHALLENGE
+ENV COMPILE=${COMPILE_CHALLENGE}
+
+COPY ./bin/ /home/ctf/
+RUN $COMPILE
+
 FROM ubuntu:20.04
 
-RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
-    apt-get update 
-
-RUN apt-get install --no-install-recommends -qy libc6-dev xinetd gcc && \
+RUN apt-get update && apt-get install --no-install-recommends -qy libc6-dev xinetd && \
     useradd -m ctf
 
 WORKDIR /home/ctf
@@ -30,13 +40,9 @@ RUN echo "Blocked by ctf_xinetd" > /etc/banner_fail && \
 
 EXPOSE 9999
 
-ARG COMPILE_CHALLENGE
-ENV COMPILE=${COMPILE_CHALLENGE}
+COPY --from=builder /home/ctf/ /home/ctf/
 
-COPY ./bin/ /home/ctf/
-
-RUN $COMPILE && \
-    chmod +x challenge && \ 
+RUN chmod +x challenge && \
     chown -R root:ctf /home/ctf && \
     chmod -R 750 /home/ctf && \
     chmod 740 /home/ctf/flag
